@@ -14,6 +14,15 @@
  *      }
  */
 
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        '-Xlint:deprecation',
+        '-Xlint:unchecked'
+    ]
+}
+
+
 apply from: 'standalone-rules.gradle'
 
 android.compileSdk = 34

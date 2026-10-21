@@ -43,6 +43,9 @@ import com.android.setupwizardlib.template.ProgressBarMixin;
 import com.android.setupwizardlib.template.RequireScrollMixin;
 import com.android.setupwizardlib.template.ScrollViewScrollHandlingDelegate;
 import com.android.setupwizardlib.view.StatusBarBackgroundLayout;
+import android.app.Activity;
+import android.content.ContextWrapper;
+import android.view.Window;
 
 /**
  * Layout for the GLIF theme used in Setup Wizard for N.
@@ -100,6 +103,18 @@ public class GlifLayout extends TemplateLayout {
     init(attrs, defStyleAttr);
   }
 
+  @Nullable
+  private static Window findWindow(@NonNull Context context) {
+      Context current = context;
+      while (current instanceof ContextWrapper) {
+          if (current instanceof Activity) {
+              return ((Activity) current).getWindow();
+          }
+          current = ((ContextWrapper) current).getBaseContext();
+      }
+      return null;
+  }
+
   // All the constructors delegate to this init method. The 3-argument constructor is not
   // available in LinearLayout before v11, so call super with the exact same arguments.
   private void init(AttributeSet attrs, int defStyleAttr) {
@@ -145,9 +160,12 @@ public class GlifLayout extends TemplateLayout {
     layoutFullscreen = a.getBoolean(R.styleable.SuwGlifLayout_suwLayoutFullscreen, true);
 
     a.recycle();
-
-    if (Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP && layoutFullscreen) {
-      setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    
+    if (layoutFullscreen) {
+        Window window = findWindow(getContext());
+        if (window != null) {
+            window.setDecorFitsSystemWindows(false);
+        }
     }
   }
 

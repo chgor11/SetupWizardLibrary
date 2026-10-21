@@ -317,7 +317,7 @@ public class GlifLayout extends TemplateLayout {
       if (patternBg instanceof StatusBarBackgroundLayout) {
         ((StatusBarBackgroundLayout) patternBg).setStatusBarBackground(background);
       } else {
-        patternBg.setBackgroundDrawable(background);
+        patternBg.setBackground(background);
       }
     }
   }

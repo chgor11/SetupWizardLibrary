@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.WindowInsets;
+import android.view.WindowInsets.Type;
 import android.widget.FrameLayout;
 import com.android.setupwizardlib.R;
 
@@ -83,7 +84,7 @@ public class StatusBarBackgroundLayout extends FrameLayout {
     super.onDraw(canvas);
     if (Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
       if (lastInsets != null) {
-        final int insetTop = ((WindowInsets) lastInsets).getSystemWindowInsetTop();
+        final int insetTop = ((WindowInsets) lastInsets).getInsets(WindowInsets.Type.systemBars()).top;
         if (insetTop > 0) {
           statusBarBackground.setBounds(0, 0, getWidth(), insetTop);
           statusBarBackground.draw(canvas);

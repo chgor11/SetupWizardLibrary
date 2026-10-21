@@ -270,10 +270,11 @@ public class GlifPatternDrawable extends Drawable {
     // Ignore
   }
 
-  @Override
-  public int getOpacity() {
-    return PixelFormat.UNKNOWN;
-  }
+@SuppressWarnings("deprecation")
+@Override
+public int getOpacity() {
+    return PixelFormat.TRANSLUCENT;
+}
 
   /**
    * Sets the color used as the base color of this pattern drawable. The alpha component of the

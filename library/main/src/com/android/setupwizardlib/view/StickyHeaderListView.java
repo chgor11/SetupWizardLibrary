@@ -30,6 +30,7 @@ import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListView;
 import com.android.setupwizardlib.R;
+import android.graphics.Insets;
 
 /**
  * This class provides sticky header functionality in a list view, to use with
@@ -139,15 +140,12 @@ public class StickyHeaderListView extends ListView {
   @Override
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-    if (getFitsSystemWindows()) {
-      statusBarInset = insets.getSystemWindowInsetTop();
-      insets.replaceSystemWindowInsets(
-          insets.getSystemWindowInsetLeft(),
-          0, /* top */
-          insets.getSystemWindowInsetRight(),
-          insets.getSystemWindowInsetBottom());
-    }
-    return insets;
+      if (getFitsSystemWindows()) {
+        final Insets systemBars = insets.getInsets(WindowInsets.Type.systemBars());
+        statusBarInset = systemBars.top;
+        return insets.inset(0, systemBars.top, 0, 0);
+      }
+      return insets;
   }
 
   @Override

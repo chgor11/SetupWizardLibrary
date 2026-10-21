@@ -295,21 +295,20 @@ public class SetupWizardLayout extends TemplateLayout {
    * Set the background of the layout, which is expected to be able to extend infinitely. If it is a
    * bitmap tile and you want it to repeat, use {@link #setBackgroundTile(int)} instead.
    */
-  public void setLayoutBackground(Drawable background) {
+public void setLayoutBackground(Drawable background) {
     final View view = findManagedViewById(R.id.suw_layout_decor);
     if (view != null) {
-      //noinspection deprecation
-      view.setBackgroundDrawable(background);
+      view.setBackground(background);
     }
-  }
+}
 
   /**
    * Set the background of the layout to a repeating bitmap tile. To use a different kind of
    * drawable, use {@link #setLayoutBackground(android.graphics.drawable.Drawable)} instead.
    */
   public void setBackgroundTile(int backgroundTile) {
-    final Drawable backgroundTileDrawable = getContext().getResources().getDrawable(backgroundTile);
-    setBackgroundTile(backgroundTileDrawable);
+      final Drawable backgroundTileDrawable = getContext().getDrawable(backgroundTile);
+      setBackgroundTile(backgroundTileDrawable);
   }
 
   private void setBackgroundTile(Drawable backgroundTile) {
@@ -320,10 +319,10 @@ public class SetupWizardLayout extends TemplateLayout {
   }
 
   private Drawable getIllustration(int asset, int horizontalTile) {
-    final Context context = getContext();
-    final Drawable assetDrawable = context.getResources().getDrawable(asset);
-    final Drawable tile = context.getResources().getDrawable(horizontalTile);
-    return getIllustration(assetDrawable, tile);
+      final Context context = getContext();
+      final Drawable assetDrawable = context.getDrawable(asset);
+      final Drawable tile = context.getDrawable(horizontalTile);
+      return getIllustration(assetDrawable, tile);
   }
 
   @SuppressLint("RtlHardcoded")

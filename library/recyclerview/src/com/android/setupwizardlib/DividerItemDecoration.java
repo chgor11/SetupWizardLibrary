@@ -1,17 +1,6 @@
 /*
  * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * ...
  */
 
 package com.android.setupwizardlib;
@@ -22,7 +11,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.IntDef;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import java.lang.annotation.Retention;
@@ -110,7 +98,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     for (int childViewIndex = 0; childViewIndex < childCount; childViewIndex++) {
       final View view = parent.getChildAt(childViewIndex);
       if (shouldDrawDividerBelow(view, parent)) {
-        final int top = (int) ViewCompat.getY(view) + view.getHeight();
+        final int top = (int) view.getY() + view.getHeight();
         divider.setBounds(0, top, width, top + dividerHeight);
         divider.draw(c);
       }

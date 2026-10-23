@@ -70,7 +70,9 @@ dependencies {
     //      }
     //
     platformDeprecatedImplementation deps['support-annotations']
+    platformDeprecatedImplementation deps['support-core']
 
     gingerbreadCompatImplementation deps['support-appcompat-v7']
     gingerbreadCompatImplementation deps['support-recyclerview-v7']
+    gingerbreadCompatImplementation deps['support-core']
 }

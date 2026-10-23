@@ -22,6 +22,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowInsets;
+import android.graphics.Insets;
 
 /**
  * This class provides sticky header functionality in a scroll view, to use with
@@ -102,17 +103,12 @@ public class StickyHeaderScrollView extends BottomScrollView {
   }
 
   @Override
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-    if (getFitsSystemWindows()) {
-      statusBarInset = insets.getSystemWindowInsetTop();
-      insets =
-          insets.replaceSystemWindowInsets(
-              insets.getSystemWindowInsetLeft(),
-              0, /* top */
-              insets.getSystemWindowInsetRight(),
-              insets.getSystemWindowInsetBottom());
-    }
-    return insets;
+      if (getFitsSystemWindows()) {
+        final Insets systemBars =   insets.getInsets(WindowInsets.Type.systemBars());
+        statusBarInset = systemBars.top;
+        return insets.inset(0, systemBars.top, 0, 0);
+      }
+      return insets;
   }
 }

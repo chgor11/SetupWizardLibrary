@@ -1,17 +1,6 @@
 /*
  * Copyright (C) 2017 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * ...
  */
 
 package com.android.setupwizardlib.items;
@@ -19,10 +8,7 @@ package com.android.setupwizardlib.items;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,14 +18,7 @@ import com.android.setupwizardlib.R;
 import com.android.setupwizardlib.view.CheckableLinearLayout;
 
 /**
- * A switch item which is divided into two parts: the start (left for LTR) side shows the title and
- * summary, and when that is clicked, will expand to show a longer summary. The end (right for LTR)
- * side is a switch which can be toggled by the user.
- *
- * <p>Note: It is highly recommended to use this item with recycler view rather than list view,
- * because list view draws the touch ripple effect on top of the item, rather than letting the item
- * handle it. Therefore you might see a double-ripple, one for the expandable area and one for the
- * entire list item, when using this in list view.
+ * A switch item which is divided into two parts: ...
  */
 public class ExpandableSwitchItem extends SwitchItem
     implements OnCheckedChangeListener, OnClickListener {
@@ -150,16 +129,14 @@ public class ExpandableSwitchItem extends SwitchItem
       TextView titleView = (TextView) view.findViewById(R.id.suw_items_title);
       for (Drawable drawable : titleView.getCompoundDrawables()) {
         if (drawable != null) {
-          drawable.setColorFilter(tintColor.getDefaultColor(), Mode.SRC_IN);
+          drawable.setTintList(tintColor);
         }
       }
-      if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-        for (Drawable drawable : titleView.getCompoundDrawablesRelative()) {
-          if (drawable != null) {
-            drawable.setColorFilter(tintColor.getDefaultColor(), Mode.SRC_IN);
-          }
+      for (Drawable drawable : titleView.getCompoundDrawablesRelative()) {
+        if (drawable != null) {
+          drawable.setTintList(tintColor);
         }
       }
     }
   }
-}
+    }

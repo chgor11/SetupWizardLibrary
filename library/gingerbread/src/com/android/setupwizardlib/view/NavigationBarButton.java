@@ -165,13 +165,17 @@ public class NavigationBarButton extends Button {
       }
     }
 
-    private boolean updateState() {
-      if (tintList != null) {
-        final int color = tintList.getColorForState(getState(), 0);
-        setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        return true; // Needs invalidate
+    private void tintDrawables() {
+      final ColorStateList textColors = getTextColors();
+      if (textColors != null) {
+        for (Drawable drawable : getAllCompoundDrawables()) {
+          if (drawable != null) {
+            drawable.setTintList(textColors);
+            drawable.setTintMode(PorterDuff.Mode.SRC_IN);
+          }
+        }
+        invalidate();
       }
-      return false;
     }
   }
 }

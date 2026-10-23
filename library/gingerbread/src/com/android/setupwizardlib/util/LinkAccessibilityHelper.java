@@ -204,7 +204,11 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
       }
       info.setFocusable(true);
       info.setClickable(true);
-      setBoundsInScreenFromBoundsInParent(info, tempRect);
+      getBoundsForSpan(span, tempRect);
+      int[] screenOffset = new int[2];
+      view.getLocationOnScreen(screenOffset);
+      tempRect.offset(screenOffset[0], screenOffset[1]);
+      info.setBoundsInScreen(tempRect);
       info.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
     }
 

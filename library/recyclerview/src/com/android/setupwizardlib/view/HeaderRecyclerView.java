@@ -1,24 +1,12 @@
 /*
  * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * ...
  */
 
 package com.android.setupwizardlib.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -233,9 +221,7 @@ public class HeaderRecyclerView extends RecyclerView {
     final int numberOfHeaders = header != null ? 1 : 0;
     event.setItemCount(event.getItemCount() - numberOfHeaders);
     event.setFromIndex(Math.max(event.getFromIndex() - numberOfHeaders, 0));
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-      event.setToIndex(Math.max(event.getToIndex() - numberOfHeaders, 0));
-    }
+    event.setToIndex(Math.max(event.getToIndex() - numberOfHeaders, 0));
   }
 
   /** Gets the header view of this RecyclerView, or {@code null} if there are no headers. */
@@ -263,7 +249,10 @@ public class HeaderRecyclerView extends RecyclerView {
   }
 
   @Override
-  @SuppressWarnings("rawtypes,unchecked") // RecyclerView.setAdapter uses raw type :(
+  // RecyclerView.setAdapter() itself uses a raw Adapter, so we must match that signature.
+  // The @SuppressWarnings must use an ARRAY of strings — writing "rawtypes,unchecked" as a
+  // single string makes the compiler treat it as one unknown category and suppresses nothing.
+  @SuppressWarnings({"rawtypes", "unchecked"})
   public void setAdapter(Adapter adapter) {
     if (header != null && adapter != null) {
       final HeaderAdapter headerAdapter = new HeaderAdapter(adapter);
@@ -272,4 +261,4 @@ public class HeaderRecyclerView extends RecyclerView {
     }
     super.setAdapter(adapter);
   }
-}
+  }

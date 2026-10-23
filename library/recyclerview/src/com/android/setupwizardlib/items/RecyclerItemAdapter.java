@@ -1,26 +1,13 @@
 /*
  * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * ...
  */
 
 package com.android.setupwizardlib.items;
 
 import android.content.res.TypedArray;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -123,7 +110,7 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder>
                 + background);
       } else {
         final Drawable[] layers = {background, selectableItemBackground};
-        view.setBackgroundDrawable(new PatchedLayerDrawable(layers));
+        view.setBackground(new LayerDrawable(layers));
       }
 
       typedArray.recycle();
@@ -219,29 +206,4 @@ public class RecyclerItemAdapter extends RecyclerView.Adapter<ItemViewHolder>
   public void setOnItemSelectedListener(OnItemSelectedListener listener) {
     this.listener = listener;
   }
-
-  /**
-   * Before Lollipop, LayerDrawable always return true in getPadding, even if the children layers do
-   * not have any padding. Patch the implementation so that getPadding returns false if the padding
-   * is empty.
-   *
-   * <p>When getPadding is true, the padding of the view will be replaced by the padding of the
-   * drawable when {@link View#setBackgroundDrawable(Drawable)} is called. This patched class makes
-   * sure layer drawables without padding does not clear out original padding on the view.
-   */
-  @VisibleForTesting
-  static class PatchedLayerDrawable extends LayerDrawable {
-
-    /** {@inheritDoc} */
-    PatchedLayerDrawable(Drawable[] layers) {
-      super(layers);
     }
-
-    @Override
-    public boolean getPadding(Rect padding) {
-      final boolean superHasPadding = super.getPadding(padding);
-      return superHasPadding
-          && !(padding.left == 0 && padding.top == 0 && padding.right == 0 && padding.bottom == 0);
-    }
-  }
-}

@@ -141,6 +141,7 @@ public class NavigationBarButton extends Button {
     }
 
     private ColorStateList tintList = null;
+    private int lastTintColor = 0;
 
     TintedDrawable(Drawable wrapped) {
       super(new Drawable[] {wrapped});
@@ -165,17 +166,16 @@ public class NavigationBarButton extends Button {
       }
     }
 
-    private void tintDrawables() {
-      final ColorStateList textColors = getTextColors();
-      if (textColors != null) {
-        for (Drawable drawable : getAllCompoundDrawables()) {
-          if (drawable != null) {
-            drawable.setTintList(textColors);
-            drawable.setTintMode(PorterDuff.Mode.SRC_IN);
-          }
+    private boolean updateState() {
+      if (tintList != null) {
+        final int color = tintList.getColorForState(getState(), 0);
+        if (color != lastTintColor) {
+          lastTintColor = color;
+          setColorFilter(color, PorterDuff.Mode.SRC_IN);
+          return true;
         }
-        invalidate();
       }
+      return false;
     }
   }
 }

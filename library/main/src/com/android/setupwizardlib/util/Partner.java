@@ -62,7 +62,7 @@ public class Partner {
    */
   public static Drawable getDrawable(Context context, @DrawableRes int id) {
     final ResourceEntry entry = getResourceEntry(context, id);
-    return entry.resources.getDrawable(entry.id);
+    return entry.resources.getDrawable(entry.id, null);
   }
 
   /**
@@ -80,7 +80,7 @@ public class Partner {
    */
   public static int getColor(Context context, @ColorRes int id) {
     final ResourceEntry resourceEntry = getResourceEntry(context, id);
-    return resourceEntry.resources.getColor(resourceEntry.id);
+    return resourceEntry.resources.getColor(resourceEntry.id, null);
   }
 
   /**

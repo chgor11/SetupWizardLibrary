@@ -25,11 +25,15 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import androidx.annotation.RequiresPermission;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 
 /**
@@ -47,6 +51,7 @@ public class SystemBarHelper {
   private static final String TAG = "SystemBarHelper";
 
   @SuppressLint("InlinedApi")
+  @SuppressWarnings("deprecation")
   private static final int DEFAULT_IMMERSIVE_FLAGS =
       View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
           | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -54,6 +59,7 @@ public class SystemBarHelper {
           | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
   @SuppressLint("InlinedApi")
+  @SuppressWarnings("deprecation")
   private static final int DIALOG_IMMERSIVE_FLAGS =
       View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
@@ -75,8 +81,16 @@ public class SystemBarHelper {
     if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
       final Window window = dialog.getWindow();
       temporarilyDisableDialogFocus(window);
-      addVisibilityFlag(window, DIALOG_IMMERSIVE_FLAGS);
-      addImmersiveFlagsToDecorView(window, DIALOG_IMMERSIVE_FLAGS);
+      if (VERSION.SDK_INT >= VERSION_CODES.R) {
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(window, window.getDecorView());
+        controller.setSystemBarsBehavior(
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        controller.hide(WindowInsetsCompat.Type.navigationBars());
+      } else {
+        addVisibilityFlag(window, DIALOG_IMMERSIVE_FLAGS);
+        addImmersiveFlagsToDecorView(window, DIALOG_IMMERSIVE_FLAGS);
+      }
 
       // Also set the navigation bar and status bar to transparent color. Note that this
       // doesn't work if android.R.boolean.config_enableTranslucentDecor is false.
@@ -96,8 +110,17 @@ public class SystemBarHelper {
    */
   public static void hideSystemBars(final Window window) {
     if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-      addVisibilityFlag(window, DEFAULT_IMMERSIVE_FLAGS);
-      addImmersiveFlagsToDecorView(window, DEFAULT_IMMERSIVE_FLAGS);
+      if (VERSION.SDK_INT >= VERSION_CODES.R) {
+        WindowCompat.setDecorFitsSystemWindows(window, false);
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(window, window.getDecorView());
+        controller.setSystemBarsBehavior(
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        controller.hide(WindowInsetsCompat.Type.navigationBars());
+      } else {
+        addVisibilityFlag(window, DEFAULT_IMMERSIVE_FLAGS);
+        addImmersiveFlagsToDecorView(window, DEFAULT_IMMERSIVE_FLAGS);
+      }
 
       // Also set the navigation bar and status bar to transparent color. Note that this
       // doesn't work if android.R.boolean.config_enableTranslucentDecor is false.
@@ -122,8 +145,15 @@ public class SystemBarHelper {
    */
   public static void showSystemBars(final Window window, final Context context) {
     if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-      removeVisibilityFlag(window, DEFAULT_IMMERSIVE_FLAGS);
-      removeImmersiveFlagsFromDecorView(window, DEFAULT_IMMERSIVE_FLAGS);
+      if (VERSION.SDK_INT >= VERSION_CODES.R) {
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(window, window.getDecorView());
+        controller.show(WindowInsetsCompat.Type.navigationBars());
+        WindowCompat.setDecorFitsSystemWindows(window, true);
+      } else {
+        removeVisibilityFlag(window, DEFAULT_IMMERSIVE_FLAGS);
+        removeImmersiveFlagsFromDecorView(window, DEFAULT_IMMERSIVE_FLAGS);
+      }
 
       if (context != null) {
         //noinspection AndroidLintInlinedApi
@@ -139,7 +169,13 @@ public class SystemBarHelper {
     }
   }
 
-  /** Convenience method to add a visibility flag in addition to the existing ones. */
+  /** Convenience method to add a visibility flag in addition to the existing ones.
+   *
+   * <p>System UI visibility flags are retained as a compatibility bridge because this API accepts
+   * arbitrary caller-supplied flags which do not all have WindowInsetsController equivalents.
+   */
+  @SuppressLint("Deprecated")
+  @SuppressWarnings("deprecation")
   public static void addVisibilityFlag(final View view, final int flag) {
     if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
       final int vis = view.getSystemUiVisibility();
@@ -148,6 +184,8 @@ public class SystemBarHelper {
   }
 
   /** Convenience method to add a visibility flag in addition to the existing ones. */
+  @SuppressLint("Deprecated")
+  @SuppressWarnings("deprecation")
   public static void addVisibilityFlag(final Window window, final int flag) {
     if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
       WindowManager.LayoutParams attrs = window.getAttributes();
@@ -160,6 +198,8 @@ public class SystemBarHelper {
    * Convenience method to remove a visibility flag from the view, leaving other flags that are not
    * specified intact.
    */
+  @SuppressLint("Deprecated")
+  @SuppressWarnings("deprecation")
   public static void removeVisibilityFlag(final View view, final int flag) {
     if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
       final int vis = view.getSystemUiVisibility();
@@ -171,6 +211,8 @@ public class SystemBarHelper {
    * Convenience method to remove a visibility flag from the window, leaving other flags that are
    * not specified intact.
    */
+  @SuppressLint("Deprecated")
+  @SuppressWarnings("deprecation")
   public static void removeVisibilityFlag(final Window window, final int flag) {
     if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
       WindowManager.LayoutParams attrs = window.getAttributes();
@@ -217,7 +259,8 @@ public class SystemBarHelper {
    */
   public static void setImeInsetView(final View view) {
     if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-      view.setOnApplyWindowInsetsListener(new WindowInsetsListener());
+      ViewCompat.setOnApplyWindowInsetsListener(view, new WindowInsetsListener());
+      ViewCompat.requestApplyInsets(view);
     }
   }
 
@@ -317,21 +360,25 @@ public class SystemBarHelper {
             });
   }
 
-  @TargetApi(VERSION_CODES.LOLLIPOP)
-  private static class WindowInsetsListener implements View.OnApplyWindowInsetsListener {
+  private static class WindowInsetsListener implements ViewCompat.OnApplyWindowInsetsListener {
     private int bottomOffset;
     private boolean hasCalculatedBottomOffset = false;
 
     @Override
-    public WindowInsets onApplyWindowInsets(View view, WindowInsets insets) {
+    public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat insets) {
       if (!hasCalculatedBottomOffset) {
         bottomOffset = getBottomDistance(view);
         hasCalculatedBottomOffset = true;
       }
 
-      int bottomInset = insets.getSystemWindowInsetBottom();
-
-      final int bottomMargin = Math.max(insets.getSystemWindowInsetBottom() - bottomOffset, 0);
+      // The legacy system-window bottom inset included the keyboard on resize-based windows.
+      // Use the larger of the system-bar and IME insets to preserve that behavior.
+      int systemBars = WindowInsetsCompat.Type.systemBars();
+      int ime = WindowInsetsCompat.Type.ime();
+      Insets systemBarInsets = insets.getInsets(systemBars);
+      Insets imeInsets = insets.getInsets(ime);
+      int bottomInset = Math.max(systemBarInsets.bottom, imeInsets.bottom);
+      final int bottomMargin = Math.max(bottomInset - bottomOffset, 0);
 
       final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
       // Check that we have enough space to apply the bottom margins before applying it.
@@ -339,14 +386,16 @@ public class SystemBarHelper {
       if (bottomMargin < lp.bottomMargin + view.getHeight()) {
         lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, bottomMargin);
         view.setLayoutParams(lp);
-        bottomInset = 0;
+        // Consume the bottom inset so that it is not applied a second time by a parent.
+        Insets adjustedSystemBars = Insets.of(
+            systemBarInsets.left, systemBarInsets.top, systemBarInsets.right, 0);
+        Insets adjustedIme = Insets.of(imeInsets.left, imeInsets.top, imeInsets.right, 0);
+        return new WindowInsetsCompat.Builder(insets)
+            .setInsets(systemBars, adjustedSystemBars)
+            .setInsets(ime, adjustedIme)
+            .build();
       }
-
-      return insets.replaceSystemWindowInsets(
-          insets.getSystemWindowInsetLeft(),
-          insets.getSystemWindowInsetTop(),
-          insets.getSystemWindowInsetRight(),
-          bottomInset);
+      return insets;
     }
   }
 

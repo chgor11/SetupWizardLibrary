@@ -204,12 +204,7 @@ public class LinkAccessibilityHelper extends AccessibilityDelegateCompat {
       }
       info.setFocusable(true);
       info.setClickable(true);
-      getBoundsForSpan(span, tempRect);
-      if (tempRect.isEmpty()) {
-        Log.e(TAG, "LinkSpan bounds is empty for: " + virtualViewId);
-        tempRect.set(0, 0, 1, 1);
-      }
-      info.setBoundsInParent(tempRect);
+      setBoundsInScreenFromBoundsInParent(info, tempRect);
       info.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
     }
 

@@ -26,6 +26,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import androidx.annotation.RequiresPermission;
 import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -360,7 +361,7 @@ public class SystemBarHelper {
             });
   }
 
-  private static class WindowInsetsListener implements ViewCompat.OnApplyWindowInsetsListener {
+  private static class WindowInsetsListener implements OnApplyWindowInsetsListener {
     private int bottomOffset;
     private boolean hasCalculatedBottomOffset = false;
 

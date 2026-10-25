@@ -60,9 +60,6 @@ public class SystemBarHelper {
     controller.setSystemBarsBehavior(
         WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
     controller.hide(WindowInsetsCompat.Type.navigationBars());
-
-    window.setNavigationBarColor(0);
-    window.setStatusBarColor(0);
   }
 
   /** Hide the navigation bar and lay out content behind the system bars. */
@@ -77,9 +74,6 @@ public class SystemBarHelper {
     controller.setSystemBarsBehavior(
         WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
     controller.hide(WindowInsetsCompat.Type.navigationBars());
-
-    window.setNavigationBarColor(0);
-    window.setStatusBarColor(0);
   }
 
   /**
@@ -104,19 +98,6 @@ public class SystemBarHelper {
     WindowInsetsControllerCompat controller =
         WindowCompat.getInsetsController(window, window.getDecorView());
     controller.show(WindowInsetsCompat.Type.navigationBars());
-    WindowCompat.setDecorFitsSystemWindows(window, true);
-
-    if (context != null) {
-      final TypedArray typedArray =
-          context.obtainStyledAttributes(
-              new int[] {android.R.attr.statusBarColor, android.R.attr.navigationBarColor});
-      try {
-        window.setStatusBarColor(typedArray.getColor(0, 0));
-        window.setNavigationBarColor(typedArray.getColor(1, 0));
-      } finally {
-        typedArray.recycle();
-      }
-    }
   }
 
   /**

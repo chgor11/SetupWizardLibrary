@@ -46,6 +46,7 @@ import com.android.setupwizardlib.view.StatusBarBackgroundLayout;
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.view.Window;
+import androidx.core.view.WindowCompat;
 
 /**
  * Layout for the GLIF theme used in Setup Wizard for N.
@@ -164,7 +165,7 @@ public class GlifLayout extends TemplateLayout {
     if (layoutFullscreen) {
         Window window = findWindow(getContext());
         if (window != null) {
-            window.setDecorFitsSystemWindows(false);
+            WindowCompat.setDecorFitsSystemWindows(window, false);
         }
     }
   }

@@ -25,5 +25,5 @@ tasks.withType(JavaCompile).configureEach {
 
 apply from: 'standalone-rules.gradle'
 
-android.compileSdk = 34
+android.compileSdk = 35
 android.namespace 'com.android.setupwizardlib'
